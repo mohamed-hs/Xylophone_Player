@@ -11,14 +11,14 @@
 #define SERVO_1 10
 #define SERVO_2 11
 
-// #include <Stepper.h>
 #include <Servo.h>
 #include <AccelStepper.h>
 #include <MultiStepper.h>
 
-#define STEPS 2048  // number of strides to reach 360 rotation
+// #define STEPS 2048  // number of strides to reach 360 rotation
 
 const int bpm = 60;
+const int teethPerMM = 2;
 
 const int C_1 = 1;
 const int D_1 = 2;
@@ -36,11 +36,8 @@ const int A_2 = -5;
 const int B_2 = -6;
 const int C_3 = -7;
 
-bool atStart1 = 1;
-bool atStart2 = 1;
-
-AccelStepper stepper1(AccelStepper::FULL4WIRE, STEP1_1, STEP1_2, STEP1_3, STEP1_4);
-AccelStepper stepper2(AccelStepper::FULL4WIRE, STEP2_1, STEP2_2, STEP2_3, STEP2_4);
+AccelStepper stepper_1(AccelStepper::FULL4WIRE, STEP1_1, STEP1_2, STEP1_3, STEP1_4);
+AccelStepper stepper_2(AccelStepper::FULL4WIRE, STEP2_1, STEP2_2, STEP2_3, STEP2_4);
 
 MultiStepper steppers;
 
@@ -67,26 +64,24 @@ void setup() {
   stepper1.setMaxSpeed(95 * bpm / 60);
   stepper1.setMaxSpeed(82 * bpm / 60);
 
-  steppers.addStepper(stepper1);
-  steppers.addStepper(stepper2);
-
-  // stepper1.setSpeed(12);
-  // stepperTest();
+  steppers.addStepper(stepper_1);
+  steppers.addStepper(stepper_2);
 }
 
 void loop() {
-
-  // stepperTest();
-  // delay(500);
-  servoTest();
 }
 
-int playNote(int newNote, int prevNote) {
-  int distance = (newNote - prevNote) * 25;
-  float rotations = distance / 123.5;
-  int rpm = 1 / bpm * rotations;
-  if (newNote >= 1) {
-  }
+int goToNotes(int newNote_1, int prevNote_1, int newNote_2, int prevNote_2) {
+  int distance_1 = (newNote_1 - prevNote_1) * 25;
+  int distance_2 = (newNote_2 - prevNote_2) * 25;
+
+  int position_1 = round(distance_1 * 123.5 / 64);
+  int position_2 = round(distance_2 * 123.5 / 64);
+
+  long positions[2];
+
+  steppers.moveTo(positions);
+  steppers.runSpeedToPosition();
 }
 
 
