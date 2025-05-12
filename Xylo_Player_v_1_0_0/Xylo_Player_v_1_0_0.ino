@@ -17,7 +17,7 @@
 
 // #define STEPS 2048  // number of strides to reach 360 rotation
 
-const int bpm = 60;
+const int bpm = 60; // Max bpm for stepper motor to function properly
 const int teethPerMM = 2;
 
 const int C_1 = 1;
@@ -47,6 +47,7 @@ Servo servo2;
 int pos = 0;
 
 int previous = 0;
+
 void setup() {
   pinMode(STEP1_1, OUTPUT);
   pinMode(STEP1_2, OUTPUT);
@@ -61,14 +62,19 @@ void setup() {
   servo1.attach(10);
   servo2.attach(11);
 
-  stepper1.setMaxSpeed(95 * bpm / 60);
-  stepper1.setMaxSpeed(82 * bpm / 60);
+  stepper_1.setMaxSpeed(95 * bpm / 60);
+  stepper_2.setMaxSpeed(95 * bpm / 60);
 
   steppers.addStepper(stepper_1);
   steppers.addStepper(stepper_2);
+  
 }
 
 void loop() {
+  long positions[2] = {-2048, 2000};
+
+  steppers.moveTo(positions);
+  steppers.runSpeedToPosition();
 }
 
 int goToNotes(int newNote_1, int prevNote_1, int newNote_2, int prevNote_2) {
