@@ -17,6 +17,11 @@
 
 // #define STEPS 2048  // number of strides to reach 360 rotation
 
+void goToNotes(int newNote_1, int newNote_2);
+
+long positions[2];
+
+
 const int bpm = 60; // Max bpm for stepper motor to function properly
 const int teethPerMM = 2;
 
@@ -62,8 +67,8 @@ void setup() {
   servo1.attach(10);
   servo2.attach(11);
 
-  stepper_1.setMaxSpeed(95 * bpm / 60);
-  stepper_2.setMaxSpeed(95 * bpm / 60);
+  stepper_1.setMaxSpeed(135 /*95 * bpm / 60*/);
+  stepper_2.setMaxSpeed(135 /*95 * bpm / 60*/);
 
   steppers.addStepper(stepper_1);
   steppers.addStepper(stepper_2);
@@ -71,20 +76,19 @@ void setup() {
 }
 
 void loop() {
-  long positions[2] = {-2048, 2000};
+  goToNotes(100, -500);
+  delay(500);
+  goToNotes(-300, 100);
+  delay(500);
 
-  steppers.moveTo(positions);
-  steppers.runSpeedToPosition();
 }
 
-int goToNotes(int newNote_1, int prevNote_1, int newNote_2, int prevNote_2) {
-  int distance_1 = (newNote_1 - prevNote_1) * 25;
-  int distance_2 = (newNote_2 - prevNote_2) * 25;
+void goToNotes(int newNote_1, int newNote_2 /* int prevNote_1, int prevNote_2 */) {
+  // int distance_1 = (newNote_1 - prevNote_1) * 25;
+  // int distance_2 = (newNote_2 - prevNote_2) * 25;
 
-  int position_1 = round(distance_1 * 123.5 / 64);
-  int position_2 = round(distance_2 * 123.5 / 64);
-
-  long positions[2];
+  positions[0] = newNote_1; // round(distance_1 * 123.5 / 64);
+  positions[1] = newNote_2; // round(distance_2 * 123.5 / 64);
 
   steppers.moveTo(positions);
   steppers.runSpeedToPosition();
